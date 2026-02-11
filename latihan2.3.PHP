@@ -1,79 +1,44 @@
 <?php
 
-class BelanjaWarung {
+class Belanja {
 
-    public $kasir;
-    public $pembeli;
+    public $namaPembeli;
     public $namaBarang;
-    public $harga;
-    public $jumlah;
+    public $hargaBarang;
+    public $jumlahBarang;
+    public $totalBayar;
     public $diskon;
-    public $uangDibayar;
+    public $pajak = 0.02;
 
-    public static $pajak = 0.02; // 2%
-
-    public function __construct($kasir, $pembeli, $barang, $harga, $jumlah, $diskon, $uangDibayar) {
-        $this->kasir = $kasir;
-        $this->pembeli = $pembeli;
-        $this->namaBarang = $barang;
-        $this->harga = $harga;
-        $this->jumlah = $jumlah;
+    public function __construct($namaPembeli, $namaBarang, $hargaBarang, $jumlahBarang, $diskon) {
+        $this->namaPembeli = $namaPembeli;
+        $this->namaBarang = $namaBarang;
+        $this->hargaBarang = $hargaBarang;
+        $this->jumlahBarang = $jumlahBarang;
         $this->diskon = $diskon;
-        $this->uangDibayar = $uangDibayar;
     }
 
-    // Hitung subtotal
-    public function hitungSubtotal() {
-        return $this->harga * $this->jumlah;
-    }
-
-    // Hitung pajak
-    public function hitungPajak() {
-        return ($this->hitungSubtotal() - $this->diskon) * self::$pajak;
-    }
-
-    // Hitung total akhir
-    public function hitungTotalAkhir() {
-        return ($this->hitungSubtotal() - $this->diskon) + $this->hitungPajak();
-    }
-
-    // Method baru hitung kembalian
-    public function hitungKembalian() {
-        return $this->uangDibayar - $this->hitungTotalAkhir();
-    }
-
-    // Tampilkan struk
-    public function tampilkanStruk() {
-
-        echo "============ WARUNG Satrio ============<br>";
-        echo "Kasir    : " . $this->kasir . "<br>";
-        echo "Pembeli  : " . $this->pembeli . "<br>";
-        echo "----------------------------------<br>";
-        echo $this->namaBarang . " x " . $this->jumlah . 
-             "  Rp " . number_format($this->harga,0,",",".") . "<br>";
-        echo "----------------------------------<br>";
-        echo "SUBTOTAL     : Rp " . number_format($this->hitungSubtotal(),0,",",".") . "<br>";
-        echo "DISKON       : Rp " . number_format($this->diskon,0,",",".") . "<br>";
-        echo "PAJAK 2%     : Rp " . number_format($this->hitungPajak(),0,",",".") . "<br>";
-        echo "TOTAL BAYAR  : Rp " . number_format($this->hitungTotalAkhir(),0,",",".") . "<br>";
-        echo "UANG BAYAR   : Rp " . number_format($this->uangDibayar,0,",",".") . "<br>";
-        echo "KEMBALIAN    : Rp " . number_format($this->hitungKembalian(),0,",",".") . "<br>";
-        echo "==================================<br>";
+    public function totalHarga(): float|int {
+        $subtotal = $this->hargaBarang * $this->jumlahBarang;
+        return $subtotal;
     }
 }
 
-
-// Contoh penggunaan
-$belanja = new BelanjaWarung(
-    "SISTEM",
-    "Maul",
-    "Anggur merah ",
-    65000,
-    2,
-    13000,
-    130000
+$belanja1 = new Belanja(
+    namaPembeli: "Miftah",
+    namaBarang: "Sampo",
+    hargaBarang: 9000,
+    jumlahBarang: 2,
+    diskon: 0.1
 );
 
-$belanja->tampilkanStruk();
+echo "<pre>";
+echo "Nama Pembeli: " . $belanja1->namaPembeli . "\n";
+echo "Nama Barang: " . $belanja1->namaBarang . "\n";
+echo "Harga Barang: Rp " . $belanja1->hargaBarang . "\n";
+echo "Jumlah Barang: " . $belanja1->jumlahBarang . "\n";
+echo "Diskon: " . ($belanja1->diskon * 100) . "%\n";
+echo "Subtotal: Rp " . $belanja1->totalHarga() . "\n";
+echo "</pre>";
 
 ?>
