@@ -2,40 +2,72 @@
 
 class Belanja {
 
-    public $namaPembeli;   // ada 6 properti dengan set value secara manual
+    public $namaPembeli;
     public $namaBarang;
     public $hargaBarang;
     public $jumlahBarang;
-    public $totalBayar;
     public $diskon;
-    public static $pajak = 0.02;
+    public $uangDibayar;
 
-    public function totalHarga(): int {
-        $subtotal = $this->hargaBarang * $this->jumlahBarang;
-        return $subtotal;
+    public static $pajak = 0.02; // 2%
+
+    // Hitung subtotal
+    public function subtotal() {
+        return $this->hargaBarang * $this->jumlahBarang;
+    }
+
+    // Hitung diskon
+    public function hitungDiskon() {
+        return $this->subtotal() * $this->diskon;
+    }
+
+    // Hitung pajak
+    public function hitungPajak() {
+        return ($this->subtotal() - $this->hitungDiskon()) * self::$pajak;
+    }
+
+    // Total akhir = (subtotal - diskon) + pajak
+    public function totalAkhir() {
+        return ($this->subtotal() - $this->hitungDiskon()) + $this->hitungPajak();
+    }
+
+    // Hitung kembalian
+    public function hitungKembalian() {
+        return $this->uangDibayar - $this->totalAkhir();
     }
 }
 
-$belanja1 = new Belanja();
-$belanja1->namaPembeli = "Miftah";
-$belanja1->namaBarang = "Sampo";
-$belanja1->hargaBarang = 9000;
-$belanja1->jumlahBarang = 2;
-$belanja1->diskon = 0.1;
 
-$belanja2 = new Belanja();
-$belanja2->namaPembeli = "Satrio";
-$belanja2->namaBarang = "mie ayam";
-$belanja2->hargaBarang = 15000;
-$belanja2->jumlahBarang = 5;
-$belanja2->diskon = 0.2;
+// =======================
+// DATA PEMBELI
+// =======================
+
+$belanja1 = new Belanja();
+$belanja1->namaPembeli = "Budi";
+$belanja1->namaBarang = "Gula 1 Kg";
+$belanja1->hargaBarang = 65000;
+$belanja1->jumlahBarang = 2;
+$belanja1->diskon = 0.1; // 10%
+$belanja1->uangDibayar = 130000;
+
+
+// =======================
+// OUTPUT
+// =======================
 
 echo "<pre>";
-echo "Nama Pembeli: " . $belanja1->namaPembeli . "\n";
-echo "Subtotal: Rp " . $belanja1->totalHarga() . "\n\n";
+echo "======== WARUNG A =======\n";
+echo "Kasir   : SISTEM\n";
+echo "Pembeli : " . $belanja1->namaPembeli . "\n";
+echo "------------------------------------------\n";
+echo $belanja1->namaBarang . " x " . $belanja1->jumlahBarang . " @ Rp " . number_format($belanja1->hargaBarang,0,",",".") . "\n";
 
-echo "Nama Pembeli: " . $belanja2->namaPembeli . "\n";
-echo "Subtotal: Rp " . $belanja2->totalHarga() . "\n";
+echo "SUBTOTAL   : Rp " . number_format($belanja1->subtotal(),0,",",".") . "\n";
+echo "DISKON     : Rp " . number_format($belanja1->hitungDiskon(),0,",",".") . "\n";
+echo "PAJAK 2%   : Rp " . number_format($belanja1->hitungPajak(),0,",",".") . "\n";
+echo "TOTAL BAYAR: Rp " . number_format($belanja1->totalAkhir(),0,",",".") . "\n";
+echo "UANG BAYAR : Rp " . number_format($belanja1->uangDibayar,0,",",".") . "\n";
+echo "KEMBALIAN  : Rp " . number_format($belanja1->hitungKembalian(),0,",",".") . "\n";
 echo "</pre>";
 
 ?>
